@@ -1,4 +1,4 @@
-package author
+package category
 
 import (
 	"net/http"
@@ -7,8 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (am *AuthorManager) GetAllAuthors(c *gin.Context) {
-	authors, err := am.GetAuthors()
+func (cm *CategoryManager) GetCategoriesHandler(c *gin.Context) {
+	categories, err := cm.GetCategories()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "Failed to fetch authors: " + err.Error(),
@@ -16,113 +16,112 @@ func (am *AuthorManager) GetAllAuthors(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, authors)
+	c.JSON(http.StatusOK, categories)
 }
 
-func (am *AuthorManager) GetOneAuthor(c *gin.Context) {
+func (cm *CategoryManager) GetCategoryHandler(c *gin.Context) {
 	idStr := c.Param("id")
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid author ID",
+			"error": "Invalid category ID",
 		})
 	}
 
-	author, err := am.GetAuthorById(id)
+	category, err := cm.GetCategory(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to fetch author: " + err.Error(),
+			"error": "Failed to fetch category: " + err.Error(),
 		})
 		return
 	}
 
-	if author == nil {
+	if category == nil {
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Author not found",
+			"error": "Category not found",
 		})
 		return
 	}
 
-	c.JSON(http.StatusOK, author)
+	c.JSON(http.StatusOK, category)
 }
 
-func (am *AuthorManager) Create(c *gin.Context) {
-	var req Author
+func (cm *CategoryManager) CreateCategoryHandler(c *gin.Context) {
+	var req Category
 
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid request body: " + err.Error(),
+			"error": "Failed request body: " + err.Error(),
 		})
 		return
 	}
 
-	author, err := am.CreateAuthor(req)
+	category, err := cm.CreateCategory(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to create author: " + err.Error(),
+			"error": "Failed to create new category" + err.Error(),
 		})
 		return
 	}
 
-	c.JSON(http.StatusCreated, author)
+	c.JSON(http.StatusCreated, category)
 }
 
-func (am *AuthorManager) Update(c *gin.Context) {
+func (cm *CategoryManager) UpdateCategoryHandler(c *gin.Context) {
 	idStr := c.Param("id")
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid author ID",
+			"error": "Invalid category ID",
 		})
 		return
 	}
 
-	var req Author
-
+	var req Category
 	if err := c.ShouldBindJSON(&req); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Invalid request body: " + err.Error(),
+			"error": "Invalud request body" + err.Error(),
 		})
 		return
 	}
 
-	_, err = am.UpdateAuthor(id, req)
+	_, err = cm.UpdateCategory(id, req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to update author: " + err.Error(),
+			"error": "Failed to update category: " + err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Author updated successfully",
+		"message": "категория обновлена",
 		"id":      id,
 	})
 }
 
-func (am *AuthorManager) Delete(c *gin.Context) {
+func (cm *CategoryManager) DeleteCategoryHandler(c *gin.Context) {
 	idStr := c.Param("id")
 
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Invalid author ID",
+			"error": "Invalid category ID",
 		})
 		return
 	}
 
-	err = am.DeleteAuthor(id)
+	err = cm.DeleteCategory(id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
-			"error": "Failed to delete author: " + err.Error(),
+			"error": "Failed to delete category: " + err.Error(),
 		})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Author deleted successfully",
+		"message": "Category deleted successfully",
 		"id":      id,
 	})
 }
