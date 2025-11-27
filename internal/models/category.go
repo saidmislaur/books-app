@@ -1,4 +1,4 @@
-package category
+package models
 
 import (
 	"database/sql"
@@ -15,10 +15,3 @@ type Category struct {
 type CategoryManager struct {
 	DB *sql.DB
 }
-
-// CREATE TABLE categories (
-//     id SERIAL PRIMARY KEY,
-//     name VARCHAR(255) NOT NULL,
-//     image TEXT,
-//     created_at TIMESTAMP NOT NULL DEFAULT NOW()
-// );
